@@ -11,34 +11,27 @@ class Yahoo(Scraper):
     def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
         BASE_URL = 'https://news.search.yahoo.com/search?q='
 
-        response = requests.get(BASE_URL+company_name+'+'+keyword)
+        response = requests.get(BASE_URL+self.company_name+self.keyword)
         soup = BeautifulSoup(response.text, 'lxml')
+        
+        NUMBER_OF_PAGES = self.numPages
 
-        NUMBER_OF_PAGES = page_count
-
-        store = []
+        titles, links, media, time, searchEngine, searchString = [],[],[],[],[],[]
 
         for i in range(NUMBER_OF_PAGES):
             nws = {}
             all_news = soup.find_all('ul', class_='compArticleList')
             for news in all_news:
-                # print(news)
-                nws['Title'] = news.find('h4').text
-                nws['Link'] = news.find('a')['href']
-                nws['MediaAgency'] = news.find('span', class_='s-source mr-5 cite-co').text
-                nws['Time'] = news.find('span', class_='fc-2nd s-time mr-8').text
-                # print(news.find('h4').text)
-                # print(news.find('a')['href'])
-                # print(news.find('span', class_='s-source mr-5 cite-co').text)
-                # print(news.find('span', class_='fc-2nd s-time mr-8').text)
-                # print()
-                store.append(nws)
-                # print(store)
-            url = soup.find('a', class_='next')['href']
-            response = requests.get(url)
-            print(url)
-            soup = BeautifulSoup(response.content, 'lxml')
+                titles.append(news.find('h4').text)
+                links.append(news.find('a')['href'])
+                media.append(news.find('span', class_='s-source mr-5 cite-co').text)
+                time.append(news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
+                searchString.append(self.company_name+'and'+self.keyword)
+                searchEngine.append('Yahoo')
+            nextResponse = requests.get(soup.find('a', class_='next')['href'])
+            soup = BeautifulSoup(nextResponse.content, 'lxml')
 
-            return pd.DataFrame(store)
+        data = {"Title": titles, "Link": links, "MediaAgency":media, "TimeStamp":time, 'SearchEngine': searchEngine, 'SearchString':searchString}
+        return pd.DataFrame(data)
 
 

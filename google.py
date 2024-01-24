@@ -2,14 +2,13 @@ import bs4
 import requests
 import pprint
 import pandas as pd
-import json
 
 BASE_URL = 'https://www.google.com/'
 
 
-def scrape(query: str):
+def scrape(query: str, page_count: int):
     all_news = []
-    NUMBER_PAGE = 5
+    NUMBER_PAGE = page_count
     next_link = "*****"
     for i in range(NUMBER_PAGE):
         if next_link == "*****":

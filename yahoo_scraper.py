@@ -36,7 +36,8 @@ class Yahoo(Scraper):
                 with open('scraper.log', 'a') as f:
                     f.write('Error in Yahoo: ' +
                             str(e.args) + '\n')
-
+        for t in time:
+            ParsedTime.append(dateparser.parse(t))
         data = {"title": titles, "link": links, "source": media,
                 "timestamp": time, 'search_engine': searchEngine, 'search_string': searchString}
         return pd.DataFrame(data)

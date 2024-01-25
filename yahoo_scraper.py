@@ -9,7 +9,18 @@ class Yahoo(Scraper):
     def __init__(self):
         pass
 
+    
     def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
+        """scrapes data from yahoo
+
+        Args:
+            company_name (str): name of the company
+            keyword (str): extra word to be searched along with the company name
+            page_count (int): number of pages to be searched
+
+        Returns:
+            pd.DataFrame: 
+        """
         BASE_URL = 'https://news.search.yahoo.com/search?q='
 
         response = requests.get(BASE_URL+company_name+keyword)
@@ -29,7 +40,9 @@ class Yahoo(Scraper):
                     news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
                 searchString.append(company_name+' and '+keyword)
                 searchEngine.append('Yahoo')
+            
             try:
+                # gets data from next page 
                 nextResponse = requests.get(
                     soup.find('a', class_='next')['href'])
                 soup = BeautifulSoup(nextResponse.content, 'lxml')
@@ -37,10 +50,12 @@ class Yahoo(Scraper):
                 with open('scraper.log', 'a') as f:
                     f.write('Error in Yahoo: ' +
                             str(e.args) + '\n')
-                    
+        
+        # to get the actual date
         ParsedTime = []
         for t in time:
             ParsedTime.append(dateparser.parse(t))
+    
         data = {"title": titles, "link": links, "source": media,
                 "timestamp": ParsedTime, 'search_engine': searchEngine, 'search_string': searchString}
         return pd.DataFrame(data)

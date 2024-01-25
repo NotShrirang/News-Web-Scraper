@@ -7,6 +7,7 @@ import tqdm
 import datetime
 
 def main():
+
     json_file = open("config.json")
     data = json.load(json_file)
     with open('scraper.log', 'a') as f:

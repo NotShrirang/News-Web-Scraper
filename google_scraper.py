@@ -11,10 +11,22 @@ class Google(Scraper):
         pass
 
     def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
+        """scrapes data from google
+
+        Args:
+            company_name (str): name of the company
+            keyword (str): extra word to be searched along with the company name
+            page_count (int): number of pages to be searched
+
+        Returns:
+            pd.DataFrame: will later be converted into csv
+        """
         all_news = []
         NUMBER_PAGE = page_count
         query = company_name + " " + keyword
         next_link = "*****"
+
+        # pagination
         for i in range(NUMBER_PAGE):
             if next_link == "*****":
                 response = requests.get(

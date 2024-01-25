@@ -9,9 +9,8 @@ class Yahoo(Scraper):
     def __init__(self):
         pass
 
-    
-    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
-        """scrapes data from yahoo
+    """
+        scrapes data from yahoo
 
         Args:
             company_name (str): name of the company
@@ -20,7 +19,8 @@ class Yahoo(Scraper):
 
         Returns:
             pd.DataFrame: 
-        """
+    """
+    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
         BASE_URL = 'https://news.search.yahoo.com/search?q='
 
         response = requests.get(BASE_URL+company_name+keyword)
@@ -29,6 +29,7 @@ class Yahoo(Scraper):
 
         titles, links, media, time, searchEngine, searchString = [], [], [], [], [], []
 
+        # pagination
         for _ in range(NUMBER_OF_PAGES):
             all_news = soup.find_all('ul', class_='compArticleList')
             for news in all_news:

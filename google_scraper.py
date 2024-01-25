@@ -10,8 +10,8 @@ class Google(Scraper):
         self.BASE_URL = 'https://www.google.com/'
         pass
 
-    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
-        """scrapes data from google
+    """
+        scrapes data from google
 
         Args:
             company_name (str): name of the company
@@ -20,7 +20,8 @@ class Google(Scraper):
 
         Returns:
             pd.DataFrame: will later be converted into csv
-        """
+    """
+    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
         all_news = []
         NUMBER_PAGE = page_count
         query = company_name + " " + keyword

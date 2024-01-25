@@ -9,8 +9,8 @@ class Bing(Scraper):
     def __init__(self):
         pass
 
-    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
-        """scrapes data from bing
+    """
+        scrapes data from bing
 
         Args:
             company_name (str): name of the company
@@ -19,10 +19,13 @@ class Bing(Scraper):
 
         Returns:
             pd.DataFrame: will later be converted into csv
-        """
+    """
+    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
+        
         search_string = company_name + "+" + keyword
         all_news = []
 
+        # pagination
         for i in range(page_count):
             url = f'https://www.bing.com/news/infinitescrollajax?qs=n&form=QBNT&sp=-1&lq=0&pq=te&sc=10-2&sk=&cvid=1590B94F6A1A40E89C0451EE4930A31D&ghsh=0&ghacc=0&ghpl=&InfiniteScroll=1&q={search_string}&first={i}1&IG=0E2CB393962B4A62A88816B1959CC59C&IID=news.5199&SFX={i}&PCW=1116'
             response = requests.get(url)
@@ -37,10 +40,12 @@ class Bing(Scraper):
                         continue
                     news = {}
 
+                    # fetcing required data from attributes
                     news['link'] = div["data-url"]
                     news['title'] = div["data-title"]
                     news['source'] = div["data-author"]
                     try:
+                        # fetching timestamp
                         for ele in soup.findChildren('span'):
                             if str(ele.get('aria-label')).endswith('ago'):
                                 timestamp.append(ele.get('aria-label'))

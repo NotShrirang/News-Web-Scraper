@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from scraper import Scraper
 import pandas as pd
+import dateparser
 
 
 class Yahoo(Scraper):
@@ -26,7 +27,7 @@ class Yahoo(Scraper):
                     news.find('span', class_='s-source mr-5 cite-co').text)
                 time.append(
                     news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
-                searchString.append(company_name+'and'+keyword)
+                searchString.append(company_name+' and '+keyword)
                 searchEngine.append('Yahoo')
             try:
                 nextResponse = requests.get(
@@ -36,8 +37,10 @@ class Yahoo(Scraper):
                 with open('scraper.log', 'a') as f:
                     f.write('Error in Yahoo: ' +
                             str(e.args) + '\n')
+                    
+        ParsedTime = []
         for t in time:
             ParsedTime.append(dateparser.parse(t))
         data = {"title": titles, "link": links, "source": media,
-                "timestamp": time, 'search_engine': searchEngine, 'search_string': searchString}
+                "timestamp": ParsedTime, 'search_engine': searchEngine, 'search_string': searchString}
         return pd.DataFrame(data)

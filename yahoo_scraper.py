@@ -16,7 +16,7 @@ class Yahoo(Scraper):
         
         NUMBER_OF_PAGES = page_count
 
-        titles, links, media, time, searchEngine, searchString = [],[],[],[],[],[]
+        titles, links, media, time, searchEngine, searchString, ParsedTime = [],[],[],[],[],[],[]
 
         for i in range(NUMBER_OF_PAGES):
             nws = {}
@@ -35,5 +35,7 @@ class Yahoo(Scraper):
             nextResponse = requests.get(soup.find('a', class_='next')['href'])
             soup = BeautifulSoup(nextResponse.content, 'lxml')
 
-        data = {"Title": titles, "Link": links, "MediaAgency":media, "TimeStamp":time, 'SearchEngine': searchEngine, 'SearchString':searchString}
+        for t in time:
+            ParsedTime.append(dateparser.parse(t))
+        data = {"Title": titles, "Link": links, "MediaAgency":media, "TimeStamp":ParsedTime, 'SearchEngine': searchEngine, 'SearchString':searchString}
         return pd.DataFrame(data)

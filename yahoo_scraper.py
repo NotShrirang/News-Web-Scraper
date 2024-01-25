@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from scraper import Scraper
 import pandas as pd
 import dateparser
+import utils
 
 
 class Yahoo(Scraper):
@@ -20,10 +21,10 @@ class Yahoo(Scraper):
         Returns:
             pd.DataFrame: 
     """
-    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
-        BASE_URL = 'https://news.search.yahoo.com/search?q='
+    def scrape(self, company_name: str, keyword: str, page_count: int, base_url:str) -> pd.DataFrame:
+        url = base_url + 'search?q='
 
-        response = requests.get(BASE_URL+company_name+keyword)
+        response = requests.get(url+company_name+keyword)
         soup = BeautifulSoup(response.text, 'lxml')
         NUMBER_OF_PAGES = page_count
 
@@ -48,14 +49,12 @@ class Yahoo(Scraper):
                     soup.find('a', class_='next')['href'])
                 soup = BeautifulSoup(nextResponse.content, 'lxml')
             except Exception as e:
-                with open('scraper.log', 'a') as f:
-                    f.write('Error in Yahoo: ' +
-                            str(e.args) + '\n')
+                utils.log_message('Error in Yahoo: ' + str(e.args) + '\n')
         
         # to get the actual date
         ParsedTime = []
         for t in time:
-            ParsedTime.append(dateparser.parse(t))
+            ParsedTime.append(utils.format_timestamp(str(t)))
     
         data = {"title": titles, "link": links, "source": media,
                 "timestamp": ParsedTime, 'search_engine': searchEngine, 'search_string': searchString}

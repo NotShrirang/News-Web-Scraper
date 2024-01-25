@@ -3,11 +3,11 @@ import requests
 import pandas as pd
 from scraper import Scraper
 import dateparser
+import utils
 
 
 class Google(Scraper):
     def __init__(self):
-        self.BASE_URL = 'https://www.google.com/'
         pass
 
     """
@@ -21,7 +21,7 @@ class Google(Scraper):
         Returns:
             pd.DataFrame: will later be converted into csv
     """
-    def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
+    def scrape(self, company_name: str, keyword: str, page_count: int, base_url:str) -> pd.DataFrame:
         all_news = []
         NUMBER_PAGE = page_count
         query = company_name + " " + keyword
@@ -31,11 +31,11 @@ class Google(Scraper):
         for i in range(NUMBER_PAGE):
             if next_link == "*****":
                 response = requests.get(
-                    self.BASE_URL+"search?q={" + query + "}&tbm=nws")
+                    base_url+"search?q={" + query + "}&tbm=nws")
                 soup = bs4.BeautifulSoup(response.content, features="lxml")
                 next_link = [element for element in soup.find_all('a') if 'Next' in str(element.text)][0].get('href')
             else:
-                response = requests.get(self.BASE_URL+next_link)
+                response = requests.get(base_url+next_link)
                 soup = bs4.BeautifulSoup(response.content, features="lxml")
                 next_link = [element for element in soup.find_all('a') if element.get('aria-label') == 'Next page'][0].get('href')
             for element in soup.select("div>a"):
@@ -47,7 +47,7 @@ class Google(Scraper):
                         ele = child.select("div>div")
                         if len(ele) == 4:
                             news['source'] = child.select("div>div")[3].text
-                            news['timestamp'] = dateparser.parse(element.select('span')[0].text)
+                            news['timestamp'] = utils.format_timestamp(element.select('span')[0].text)
                             break
                         else:
                             if len(ele[0].select('span')) == 5:

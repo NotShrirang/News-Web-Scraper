@@ -1,19 +1,28 @@
-[
-  {
-    "company_name": "Google",
-    "keywords": ["Mobiles", "AI"],
-    "page_count": 3
+{
+  "base_url": {
+    "google": "https://www.google.com/",
+    "bing": "https://www.bing.com/",
+    "yahoo": "https://news.search.yahoo.com/"
   },
 
-  {
-    "company_name": "Tesla",
-    "keywords": ["EV", "Cars"],
-    "page_count": 4
-  },
+  "query_data":
+  [
+    {
+      "company_name": "Google",
+      "keywords": ["Mobiles", "AI"],
+      "page_count": 3
+    },
 
-  {
-    "company_name": "Volkswagen",
-    "keywords": ["Cars", "Engine"],
-    "page_count": 3
-  }
-]
+    {
+      "company_name": "Tesla",
+      "keywords": ["EV", "Cars"],
+      "page_count": 4
+    },
+
+    {
+      "company_name": "Volkswagen",
+      "keywords": ["Cars", "Engine"],
+      "page_count": 3
+    }
+  ]
+}

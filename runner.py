@@ -4,20 +4,20 @@ from google_scraper import Google
 from yahoo_scraper import Yahoo
 from bing_scraper import Bing
 import tqdm
-
+import datetime
 
 def main():
     json_file = open("config.json")
     data = json.load(json_file)
     with open('scraper.log', 'a') as f:
-        f.write("#################### SCRAPING BEGUN ####################\n\n")
+        f.write("#################### SCRAPING BEGUN ####################\n\n"+datetime.datetime.now())
     for elements in tqdm.tqdm(data):
         company_name = elements['company_name']
         keywords = elements['keywords']
         page_count = elements['page_count']
         final_df = pd.DataFrame()
         with open('scraper.log', 'a') as f:
-            f.write("\nEXEC: Scraping Data for "+company_name)
+            f.write("\nEXEC: Scraping Data for "+company_name+datetime.datetime.now())
         for keyword in tqdm.tqdm(keywords):
             google = Google()
             df1 = google.scrape(company_name, keyword, page_count)
@@ -27,9 +27,9 @@ def main():
             df3 = bing.scrape(company_name, keyword, page_count)
             final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
         with open('scraper.log', 'a') as f:
-            f.write("\nDONE: Scraped Data for "+company_name)
+            f.write("\nDONE: Scraped Data for "+company_name+datetime.datetime.now())
     with open('scraper.log', 'a') as f:
-        f.write("\n\n#################### SCRAPING DONE ####################")
+        f.write("\n\n#################### SCRAPING DONE ####################"+datetime.datetime.now())
     final_df.to_csv('news.csv')
 
 

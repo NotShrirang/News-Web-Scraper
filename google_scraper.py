@@ -10,16 +10,6 @@ class Google(Scraper):
         pass
 
     def scrape(self, company_name: str, keyword: str, page_count: int) -> pd.DataFrame:
-        """Scrapes the news from google.com
-
-        Args:
-            company_name (str): company name to search
-            keyword (str): keyword to search
-            page_count (int): number of pages to scrape
-
-        Returns:
-            pd.DataFrame: dataframe containing the scraped data
-        """
         all_news = []
         NUMBER_PAGE = page_count
         query = company_name + " " + keyword
@@ -29,13 +19,11 @@ class Google(Scraper):
                 response = requests.get(
                     self.BASE_URL+"search?q={" + query + "}&tbm=nws")
                 soup = bs4.BeautifulSoup(response.content, features="lxml")
-                next_link = [element for element in soup.find_all(
-                    'a') if 'Next' in str(element.text)][0].get('href')
+                next_link = [element for element in soup.find_all('a') if 'Next' in str(element.text)][0].get('href')
             else:
                 response = requests.get(self.BASE_URL+next_link)
                 soup = bs4.BeautifulSoup(response.content, features="lxml")
-                next_link = [element for element in soup.find_all(
-                    'a') if element.get('aria-label') == 'Next page'][0].get('href')
+                next_link = [element for element in soup.find_all('a') if element.get('aria-label') == 'Next page'][0].get('href')
             for element in soup.select("div>a"):
                 if str(element.text).endswith('ago'):
                     news = {}

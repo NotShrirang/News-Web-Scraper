@@ -18,14 +18,13 @@ def main():
     final_df = pd.DataFrame()
     for company_name in tqdm.tqdm(company_names):
         for keyword in tqdm.tqdm(keywords):
-            # google = Google()
-            # df1 = google.scrape(company_name, keyword, page_count)
+            google = Google()
+            df1 = google.scrape(company_name, keyword, page_count)
             yahoo = Yahoo()
             df2 = yahoo.scrape(company_name, keyword, page_count)
-            # bing = Bing()
-            # df3 = bing.scrape(company_name, keyword, page_count)
-            # df = pd.concat([df1, df2, df3], ignore_index=True)
-            final_df = pd.concat([final_df, df2], ignore_index=True)
+            bing = Bing()
+            df3 = bing.scrape(company_name, keyword, page_count)
+            final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
     final_df.to_csv('news.csv')
 
 

@@ -13,27 +13,30 @@ class Yahoo(Scraper):
 
         response = requests.get(BASE_URL+company_name+keyword)
         soup = BeautifulSoup(response.text, 'lxml')
-        
         NUMBER_OF_PAGES = page_count
 
-        titles, links, media, time, searchEngine, searchString = [],[],[],[],[],[]
+        titles, links, media, time, searchEngine, searchString = [], [], [], [], [], []
 
-        for i in range(NUMBER_OF_PAGES):
-            nws = {}
+        for _ in range(NUMBER_OF_PAGES):
             all_news = soup.find_all('ul', class_='compArticleList')
             for news in all_news:
                 titles.append(news.find('h4').text)
                 links.append(news.find('a')['href'])
-                media.append(news.find('span', class_='s-source mr-5 cite-co').text)
-                time.append(news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
+                media.append(
+                    news.find('span', class_='s-source mr-5 cite-co').text)
+                time.append(
+                    news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
                 searchString.append(company_name+'and'+keyword)
                 searchEngine.append('Yahoo')
-            if soup.find('a', class_='next') is None:
-                with open('index.html', 'w') as f:
-                    f.write(soup.prettify())
-                continue
-            nextResponse = requests.get(soup.find('a', class_='next')['href'])
-            soup = BeautifulSoup(nextResponse.content, 'lxml')
+            try:
+                nextResponse = requests.get(
+                    soup.find('a', class_='next')['href'])
+                soup = BeautifulSoup(nextResponse.content, 'lxml')
+            except Exception as e:
+                with open('scraper.log', 'a') as f:
+                    f.write('Error in Yahoo: ' +
+                            str(e.args) + '\n')
 
-        data = {"Title": titles, "Link": links, "MediaAgency":media, "TimeStamp":time, 'SearchEngine': searchEngine, 'SearchString':searchString}
+        data = {"title": titles, "link": links, "source": media,
+                "timestamp": time, 'search_engine': searchEngine, 'search_string': searchString}
         return pd.DataFrame(data)

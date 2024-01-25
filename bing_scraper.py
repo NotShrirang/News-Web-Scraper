@@ -34,7 +34,9 @@ class Bing(Scraper):
                             anchor)).start()-10: re.search(r"ago", str(anchor)).end()]
                         news['timestamp'] = timestamp[timestamp.find("\"")+1:]
                     except Exception as e:
-                        print("Error: Timestamp not found"+str(e.args))
+                        with open('scraper.log', 'a') as f:
+                            f.write('Error in Bing: ' +
+                                    str(e.args) + '\n')
                     news['search_engine'] = 'bing'
                     news['search_string'] = company_name + " and " + keyword
 

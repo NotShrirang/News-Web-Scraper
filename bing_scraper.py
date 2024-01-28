@@ -35,6 +35,15 @@ class Bing(Scraper):
             if response.status_code == 200:
 
                 soup = BeautifulSoup(response.content, "html.parser")
+
+                try:
+                    # fetching timestamp
+                    for ele in soup.findChildren('span'):
+                        if str(ele.get('aria-label')).endswith('ago'):
+                            timestamp.append(ele.get('aria-label'))
+                except Exception as e:
+                    utils.log_message('Error in Bing: ' + str(e.args) + '\n')
+                    
                 count = 0
                 for div in soup:
                     if div is None:
@@ -45,15 +54,8 @@ class Bing(Scraper):
                     news['link'] = div["data-url"]
                     news['title'] = div["data-title"]
                     news['source'] = div["data-author"]
-                    try:
-                        # fetching timestamp
-                        for ele in soup.findChildren('span'):
-                            if str(ele.get('aria-label')).endswith('ago'):
-                                timestamp.append(ele.get('aria-label'))
-                        news['timestamp'] = utils.format_timestamp(str(timestamp[count]))
-                        count += 1
-                    except Exception as e:
-                        utils.log_message('Error in Bing: ' + str(e.args) + '\n')
+                    news['timestamp'] = utils.format_timestamp(str(timestamp[count]))
+                    count += 1
                     news['search_engine'] = 'Bing'
                     news['search_string'] = company_name + " and " + keyword
 

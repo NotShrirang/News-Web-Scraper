@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
-from scraper import Scraper
-import dateparser
-import utils
+from .scraper import Scraper
+from utils import logger, date_utils
 
 
 class Bing(Scraper):
@@ -21,8 +20,9 @@ class Bing(Scraper):
         Returns:
             pd.DataFrame: will later be converted into csv
     """
-    def scrape(self, company_name: str, keyword: str, page_count: int, base_url:str) -> pd.DataFrame:
-        
+
+    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
+
         search_string = company_name + "+" + keyword
         all_news = []
 
@@ -42,8 +42,8 @@ class Bing(Scraper):
                         if str(ele.get('aria-label')).endswith('ago'):
                             timestamp.append(ele.get('aria-label'))
                 except Exception as e:
-                    utils.log_message('Error in Bing: ' + str(e.args) + '\n')
-                    
+                    logger.log_message('Error in Bing: ' + str(e.args) + '\n')
+
                 count = 0
                 for div in soup:
                     if div is None:
@@ -54,9 +54,11 @@ class Bing(Scraper):
                     news['link'] = div["data-url"]
                     news['title'] = div["data-title"]
                     news['source'] = div["data-author"]
-                    news['timestamp'] = utils.format_timestamp(str(timestamp[count]))
+                    news['timestamp'] = date_utils.format_timestamp(
+                        str(timestamp[count]))
                     count += 1
                     news['search_engine'] = 'Bing'
+                    news['page_count'] = i + 1
                     news['search_string'] = company_name + " and " + keyword
 
                     all_news.append(news)

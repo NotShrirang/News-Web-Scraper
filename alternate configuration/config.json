@@ -1,0 +1,13 @@
+{
+    "base_url": {
+        "google": "https://www.google.com/",
+        "bing": "https://www.bing.com/",
+        "yahoo": "https://news.search.yahoo.com/"
+    },
+
+    "query_data": {
+        "company_names": ["Tesla","Volkswagen"],
+        "keywords": ["Cars", "EV","Engine"],
+        "page_count": 3
+    }
+}

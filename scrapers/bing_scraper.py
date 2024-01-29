@@ -42,7 +42,7 @@ class Bing(Scraper):
                         if str(ele.get('aria-label')).endswith('ago'):
                             timestamp.append(ele.get('aria-label'))
                 except Exception as e:
-                    logger.log_message('Error in Bing: ' + str(e.args) + '\n')
+                    logger.log_message('Error in Bing: ' + str(e.args), level=1)
 
                 count = 0
                 for div in soup:
@@ -54,8 +54,11 @@ class Bing(Scraper):
                     news['link'] = div["data-url"]
                     news['title'] = div["data-title"]
                     news['source'] = div["data-author"]
-                    news['timestamp'] = date_utils.format_timestamp(
-                        str(timestamp[count]))
+                    try:
+                        news['timestamp'] = date_utils.format_timestamp(
+                            str(timestamp[count]))
+                    except Exception as e:
+                        logger.log_message('Error in Bing: ' + str(e.args), level=1)
                     count += 1
                     news['search_engine'] = 'Bing'
                     news['page_count'] = i + 1

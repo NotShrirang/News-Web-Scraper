@@ -51,7 +51,7 @@ class Yahoo(Scraper):
                     soup.find('a', class_='next')['href'])
                 soup = BeautifulSoup(nextResponse.content, 'lxml')
             except Exception as e:
-                logger.log_message('Error in Yahoo: ' + str(e.args) + '\n')
+                logger.log_message('Error in Yahoo: ' + str(e.args), level=1)
 
         # to get the actual date
         ParsedTime = []
@@ -59,5 +59,5 @@ class Yahoo(Scraper):
             ParsedTime.append(date_utils.format_timestamp(str(t)))
 
         data = {"title": titles, "link": links, "source": media,
-                "timestamp": ParsedTime, 'search_engine': searchEngine, 'page_number': pageNumber, 'search_string': searchString}
+                "timestamp": ParsedTime, 'search_engine': searchEngine, 'page_count': pageNumber, 'search_string': searchString}
         return pd.DataFrame(data)

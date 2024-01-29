@@ -5,24 +5,9 @@
     "yahoo": "https://news.search.yahoo.com/"
   },
 
-  "query_data":
-  [
-    {
-      "company_name": "Google",
-      "keywords": ["Mobiles", "AI"],
-      "page_count": 3
-    },
-
-    {
-      "company_name": "Tesla",
-      "keywords": ["EV", "Cars"],
-      "page_count": 4
-    },
-
-    {
-      "company_name": "Volkswagen",
-      "keywords": ["Cars", "Engine"],
-      "page_count": 3
+  "query_data": {
+      "company_names": ["Google","Meta"],
+      "keywords": ["Advertising", "AI"],
+      "page_count": 1
     }
-  ]
 }

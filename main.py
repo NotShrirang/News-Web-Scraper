@@ -23,25 +23,24 @@ from utils import logger, dataframe_utils
 """
 def scrape_data_for_company(args):
     elements, base_urls = args
-    company_name = elements['company_name']
-    keywords = elements['keywords']
     page_count = elements['page_count']
     final_df = pd.DataFrame()
 
     logger.log_message(message="EXEC: Scraping Data for " + company_name, level=0)
 
     # pass company, keyword, and page_count to each search engine function
-    for keyword in tqdm.tqdm(keywords):
-        google = Google()
-        df1 = google.scrape(company_name, keyword, page_count,
-                            base_url=base_urls['google'])
-        yahoo = Yahoo()
-        df2 = yahoo.scrape(company_name, keyword, page_count,
-                           base_url=base_urls['yahoo'])
-        bing = Bing()
-        df3 = bing.scrape(company_name, keyword, page_count,
-                          base_url=base_urls['bing'])
-        final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
+    for company_name in tqdm.tqdm(elements['company_names']):
+        for keyword in tqdm.tqdm(elements['keywords']):
+            google = Google()
+            df1 = google.scrape(company_name, keyword, page_count,
+                                base_url=base_urls['google'])
+            yahoo = Yahoo()
+            df2 = yahoo.scrape(company_name, keyword, page_count,
+                            base_url=base_urls['yahoo'])
+            bing = Bing()
+            df3 = bing.scrape(company_name, keyword, page_count,
+                            base_url=base_urls['bing'])
+            final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
 
     logger.log_message(message="DONE:Scraped Data for " + company_name, level=0)
     return final_df
@@ -72,21 +71,18 @@ def multiprocessing_module(base_urls, query_data):
         query_data: contains search query data (company name, keywords, page count)
 """
 def multithreading_module(base_urls, query_data):
-    
-    for elements in tqdm.tqdm(query_data):
-        company_name = elements['company_name']
-        keywords = elements['keywords']
-        page_count = elements['page_count']
-        final_df = pd.DataFrame()
+   
+    page_count = query_data['page_count']
+    final_df = pd.DataFrame()
 
+    # pass company, keyword and page_count to each search engine function
+    for company_name in tqdm.tqdm(query_data['company_names']):
         logger.log_message(message="EXEC: Scraping Data for "+company_name, level=0)
-
-        # pass company, keyword and page_count to each search engine function
-        for keyword in tqdm.tqdm(keywords):
+        for keyword in tqdm.tqdm(query_data['keywords']):
             google = Google()
             yahoo = Yahoo()
             bing = Bing()
- 
+
             with concurrent.futures.ThreadPoolExecutor() as executor:
                 futures = [
                     executor.submit(google.scrape, company_name, keyword,
@@ -97,7 +93,7 @@ def multithreading_module(base_urls, query_data):
                                     page_count, base_urls['bing'])
                 ]
             concurrent.futures.wait(futures)
- 
+
             for future in futures:
                 result_df = future.result()
                 final_df = pd.concat([final_df, result_df], ignore_index=True)

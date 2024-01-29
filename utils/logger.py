@@ -1,6 +1,17 @@
 import logging
 
 
+"""
+        logs success/failure messages in logger file
+
+        Args:
+            message (str): message to log
+            level (int): severity level (error=1, info=0)
+
+        Returns:
+            pd.DataFrame: will later be converted into csv
+    """
+
 def log_message(message: str, level: int):
     logging.basicConfig(filename='logger.log',
             format="%(asctime)s - %(levelname)s - %(message)s",
@@ -8,5 +19,5 @@ def log_message(message: str, level: int):
 
     if level == 1:
         logging.error(message)
-    else:
+    elif level == 0:
         logging.info(message)

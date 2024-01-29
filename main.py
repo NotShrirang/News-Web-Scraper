@@ -12,6 +12,15 @@ import sys
 from utils import logger, dataframe_utils
 
 
+"""
+    iterates over search strings and calls fuctions for scraping
+
+    Args:
+        args: consists of base URLs and search strings (company name, keywords, page count)
+
+    Returns:
+        pd.DataFrame: will later be converted into csv
+"""
 def scrape_data_for_company(args):
     elements, base_urls = args
     company_name = elements['company_name']
@@ -38,6 +47,13 @@ def scrape_data_for_company(args):
     return final_df
 
 
+"""
+    scrapes data using multiprocessing
+
+    Args:
+        base_urls: base URLs of search engines
+        query_data: contains search query data (company name, keywords, page count)
+"""
 def multiprocessing_module(base_urls, query_data):
     with Pool() as pool:
         # Remove the extra square brackets
@@ -48,6 +64,13 @@ def multiprocessing_module(base_urls, query_data):
     dataframe_utils.convert_df_to_csv(final_df)
 
 
+"""
+    scrapes data using multithreading
+
+    Args:
+        base_urls: base URLs of search engines
+        query_data: contains search query data (company name, keywords, page count)
+"""
 def multithreading_module(base_urls, query_data):
     
     for elements in tqdm.tqdm(query_data):

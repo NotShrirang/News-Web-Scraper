@@ -23,13 +23,13 @@ This Python script is designed to scrape news data from Google, Yahoo, and Bing 
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/NotShrirang/news-web-scraper.git
+    git clone https://github.com/NotShrirang/News-Web-Scraper.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd news-web-scraper
+    cd News-Web-Scraper
     ```
 
 3. Install the required dependencies:

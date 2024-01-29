@@ -48,7 +48,7 @@ This Python script is designed to scrape news data from Google, Yahoo, and Bing 
     python main.py
     ```
 
-3. The scraped data will be saved as `output.csv` in the project directory.
+3. The scraped data will be saved as `news.csv` in the project directory.
 
 ## Configuration
 

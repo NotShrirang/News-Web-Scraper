@@ -5,11 +5,10 @@
     "yahoo": "https://news.search.yahoo.com/"
   },
 
-  "query_data":
-  [
+  "query_data": [
     {
       "company_name": "Dabur",
-      "keywords": [],
+      "keywords": ["Lawsuit", "Bankrupcy"],
       "page_count": 1
     }
   ]

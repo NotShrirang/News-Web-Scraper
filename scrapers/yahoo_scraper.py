@@ -51,7 +51,7 @@ class Yahoo(Scraper):
                     soup.find('a', class_='next')['href'])
                 soup = BeautifulSoup(nextResponse.content, 'lxml')
             except Exception as e:
-                logger.log_message('Error in Yahoo: ' + str(e.args) + '\n')
+                logger.log_message(message='Error in Yahoo: ' + str(e.args), level=1)
 
         # to get the actual date
         ParsedTime = []

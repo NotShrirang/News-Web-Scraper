@@ -10,23 +10,22 @@ import time
 import warnings
 warnings.filterwarnings("ignore")
 
-def main():
 
+def main():
 
     # fetching data from json file
     with open('config.json', 'r') as f:
         data = json.load(f)
-    logger.log_message("SCRAPING BEGINS\n\n", level=0)
+    logger.log_message("SCRAPING BEGINS", level=0)
     base_urls = data['base_url']
-    for elements in tqdm.tqdm(data['query_data']):
-        company_name = elements['company_name']
-        keywords = elements['keywords']
-        page_count = elements['page_count']
-        final_df = pd.DataFrame()
+    elements = data['query_data']
+    print(elements)
+    page_count = elements['page_count']
+    final_df = pd.DataFrame()
+    for company_name in tqdm.tqdm(elements['company_names']):
+        logger.log_message("EXEC: Scraping Data for "+company_name, level=0)
 
-        logger.log_message("\nEXEC: Scraping Data for "+company_name, level=0)
-
-        for keyword in tqdm.tqdm(keywords):
+        for keyword in tqdm.tqdm(elements['keywords']):
             google = Google()
             yahoo = Yahoo()
             bing = Bing()
@@ -45,8 +44,8 @@ def main():
                 result_df = future.result()
                 final_df = pd.concat([final_df, result_df], ignore_index=True)
 
-        logger.log_message("\nDONE:Scraped Data for "+company_name, level=0)
-    logger.log_message("\n\nSCRAPING DONE", level=1)
+        logger.log_message("DONE:Scraped Data for "+company_name, level=0)
+    logger.log_message("SCRAPING DONE", level=0)
     dataframe_utils.convert_df_to_csv(final_df)
 
 

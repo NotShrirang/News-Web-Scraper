@@ -1,3 +1,4 @@
+# import necessary libraries
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -9,19 +10,19 @@ class Bing(Scraper):
     def __init__(self):
         pass
 
-    """
+    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
+        """
         scrapes data from bing
 
         Args:
             company_name (str): name of the company
             keyword (str): extra word to be searched along with the company name
             page_count (int): number of pages to be searched
+            base_url (str): Base URL for constructing search requests
 
         Returns:
             pd.DataFrame: will later be converted into csv
     """
-
-    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
 
         search_string = company_name + "+" + keyword
         all_news = []

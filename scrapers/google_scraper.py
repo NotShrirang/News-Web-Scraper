@@ -1,3 +1,4 @@
+# import necessary libraries
 import bs4
 import requests
 import pandas as pd
@@ -11,31 +12,20 @@ class Google(Scraper):
     def __init__(self):
         pass
 
-    """
-        scrapes data from google
+    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str):
+        """
+        This method scrapes data based on the given search string from Google search engine
 
         Args:
             company_name (str): name of the company
             keyword (str): extra word to be searched along with the company name
             page_count (int): number of pages to be searched
-
-        Returns:
-            pd.DataFrame: will later be converted into csv
-    """
-
-    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str):
-        '''
-        This method scrapes data based on the given search string from Google search engine
-
-        Parameters:
-            company    : Company name.
-            keywords   : List of keywords.
-            page_count : Number of pages to scrap.
-            
+            base_url (str): base URL for constructing search requests
+                
         Returns:
             df : DataFrame of scraped data from Google search engine.
             
-        '''
+        """
         titles=[]
         times=[]
         medias=[]

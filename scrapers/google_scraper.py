@@ -68,19 +68,22 @@ class Google(Scraper):
                         for child in element.children:
                             ele = child.select("div>div")
                             if len(ele) == 4:
-                                news['source'] = child.select("div>div")[3].text
+                                news['source'] = child.select("div>div")[
+                                    3].text
                                 news['timestamp'] = date_utils.format_timestamp(
                                     element.select('span')[0].text)
                                 break
                             else:
                                 if len(ele[0].select('span')) == 5:
-                                    news['source'] = ele[0].select('span')[3].text
-                                    news['timestamp'] = ele[0].select('span')[
-                                        4].text
+                                    news['source'] = ele[0].select('span')[
+                                        3].text
+                                    news['timestamp'] = date_utils.format_timestamp(ele[0].select('span')[
+                                        4].text)
                         # Adding additional information to the news
                         news['search_engine'] = 'google'
                         news['page_count'] = i+1
-                        news['search_string'] = company_name + " and " + keyword
+                        news['search_string'] = company_name + \
+                            " and " + keyword
                         # Adding news dictionary to list
                         all_news.append(news)
 
@@ -89,4 +92,4 @@ class Google(Scraper):
             return final_df
         except Exception as e:
             logger.log_message(
-                            message='Error in Google: ' + str(e.args), level=1)
+                message='Error in Google: ' + str(e.args), level=1)

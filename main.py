@@ -9,7 +9,6 @@ import tqdm
 import timeit
 import concurrent.futures
 import sys
-import validators
 from utils import logger, dataframe_utils
 
 
@@ -31,19 +30,19 @@ def scrape_data_for_company(args):
                            company_name, level=0)
 
         # pass company, keyword, and page_count to each search engine function
-       
+
         google = Google()
         df1 = google.scrape(company_name, keyword, page_count,
-                                base_url=base_urls['google'])
-        
+                            base_url=base_urls['google'])
+
         yahoo = Yahoo()
         df2 = yahoo.scrape(company_name, keyword, page_count,
                            base_url=base_urls['yahoo'])
-        
+
         bing = Bing()
         df3 = bing.scrape(company_name, keyword, page_count,
                           base_url=base_urls['bing'])
-        
+
         final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
 
         logger.log_message(message="DONE:Scraped Data for " +
@@ -51,7 +50,7 @@ def scrape_data_for_company(args):
         return final_df
     except Exception as e:
         logger.log_message(
-                            message='Error in Bing: ' + str(e.args), level=1)
+            message='Error in Bing: ' + str(e.args), level=1)
 
 
 def multiprocessing_module(base_urls, query_data):
@@ -75,7 +74,7 @@ def multiprocessing_module(base_urls, query_data):
         dataframe_utils.convert_df_to_csv(final_df)
     except Exception as e:
         logger.log_message(
-                            message='Error in multiprocessing_module : ' + str(e.args), level=1)
+            message='Error in multiprocessing_module : ' + str(e.args), level=1)
 
 
 def multithreading_module(base_urls, query_data):
@@ -112,41 +111,41 @@ def multithreading_module(base_urls, query_data):
 
                 for future in futures:
                     result_df = future.result()
-                    final_df = pd.concat([final_df, result_df], ignore_index=True)
+                    final_df = pd.concat(
+                        [final_df, result_df], ignore_index=True)
 
             logger.log_message(
                 message="DONE:Scraped Data for "+company_name, level=0)
         dataframe_utils.convert_df_to_csv(final_df)
     except Exception as e:
         logger.log_message(
-                            message='Error in multithreading_module: ' + str(e.args), level=1)
+            message='Error in multithreading_module: ' + str(e.args), level=1)
+
 
 def main():
+    """
+    Main function to initiate data scraping process.
+    """
+    start_time = timeit.default_timer()
+    # fetching data from json file.
+    with open('config.json', 'r') as f:
+        data = json.load(f)
+    logger.log_message(message="SCRAPING BEGINS", level=0)
+    base_urls = data['base_url']
+    query_data = data['query_data']
 
-        """
-        Main function to initiate data scraping process.
-        """
-        start_time = timeit.default_timer()
-        # fetching data from json file.
-        with open('config.json', 'r') as f:
-            data = json.load(f)
-        logger.log_message(message="SCRAPING BEGINS", level=0)
-        base_urls = data['base_url']
-        query_data = data['query_data']
+    # if no commandline argument is given then default multiprocessing will be implemented.
+    if (len(sys.argv) == 1) or (sys.argv[1] == "multiprocessing"):
+        multiprocessing_module(base_urls=base_urls, query_data=query_data)
+    elif sys.argv[1] == "multithreading":
+        multithreading_module(base_urls=base_urls, query_data=query_data)
 
-        #if no commandline argument is given then default multiprocessing will be implemented.
-        if (len(sys.argv) == 1) or (sys.argv[1] == "multiprocessing"):
-            multiprocessing_module(base_urls=base_urls, query_data=query_data)
-        elif sys.argv[1] == "multithreading":
-            multithreading_module(base_urls=base_urls, query_data=query_data)
+    logger.log_message(message="SCRAPING DONE", level=0)
 
+    elapsed_time = timeit.default_timer() - start_time
+    logger.log_message(
+        message=f"Elapsed Time: {elapsed_time} seconds", level=0)
 
-        logger.log_message(message="SCRAPING DONE", level=0)
-
-        elapsed_time = timeit.default_timer() - start_time
-        logger.log_message(
-            message=f"Elapsed Time: {elapsed_time} seconds", level=0)
-   
 
 if __name__ == '__main__':
     main()

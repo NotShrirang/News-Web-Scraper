@@ -1,3 +1,4 @@
+# import necessary libraries
 import json
 import pandas as pd
 from multiprocessing import Pool
@@ -11,17 +12,16 @@ import sys
 
 from utils import logger, dataframe_utils
 
-
-"""
+def scrape_data_for_company(args):
+    """
     iterates over search strings and calls fuctions for scraping
 
     Args:
         args: consists of base URLs and search strings (company name, keywords, page count)
 
     Returns:
-        pd.DataFrame: will later be converted into csv
+        pd.DataFrame: Scraped data from different search engines which will later be converted into csv
 """
-def scrape_data_for_company(args):
     elements, base_urls = args
     page_count = elements['page_count']
     final_df = pd.DataFrame()
@@ -46,14 +46,14 @@ def scrape_data_for_company(args):
     return final_df
 
 
-"""
+def multiprocessing_module(base_urls, query_data):
+    """
     scrapes data using multiprocessing
 
     Args:
         base_urls: base URLs of search engines
         query_data: contains search query data (company name, keywords, page count)
 """
-def multiprocessing_module(base_urls, query_data):
     with Pool() as pool:
         # Remove the extra square brackets
         results = list(tqdm.tqdm(pool.imap(scrape_data_for_company, ((
@@ -63,15 +63,14 @@ def multiprocessing_module(base_urls, query_data):
     dataframe_utils.convert_df_to_csv(final_df)
 
 
-"""
+def multithreading_module(base_urls, query_data):
+   """
     scrapes data using multithreading
 
     Args:
         base_urls: base URLs of search engines
         query_data: contains search query data (company name, keywords, page count)
 """
-def multithreading_module(base_urls, query_data):
-   
     page_count = query_data['page_count']
     final_df = pd.DataFrame()
 
@@ -103,6 +102,9 @@ def multithreading_module(base_urls, query_data):
 
 
 def main():
+    """
+    Main function to initiate data scraping process.
+    """
     start_time = timeit.default_timer()
     # fetching data from json file
     with open('config.json', 'r') as f:
@@ -121,7 +123,6 @@ def main():
     elapsed_time = timeit.default_timer() - start_time
     logger.log_message(message=f"Elapsed Time: {elapsed_time} seconds", level=0)
     
-
 
 if __name__ == '__main__':
     main()

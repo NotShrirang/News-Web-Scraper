@@ -1,3 +1,4 @@
+# import necessary libraries
 import requests
 from bs4 import BeautifulSoup
 from .scraper import Scraper
@@ -9,19 +10,20 @@ class Yahoo(Scraper):
     def __init__(self):
         pass
 
-    """
+    
+    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
+        """
         scrapes data from yahoo
 
         Args:
             company_name (str): name of the company
             keyword (str): extra word to be searched along with the company name
             page_count (int): number of pages to be searched
+            base_url (str): base URL for constructing search requests.
 
         Returns:
-            pd.DataFrame: 
+            pd.DataFrame: Scraped data from Yahoo.
     """
-
-    def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
         url = base_url + 'search?q='
 
         response = requests.get(url+company_name+keyword)
@@ -53,7 +55,7 @@ class Yahoo(Scraper):
             except Exception as e:
                 logger.log_message('Error in Yahoo: ' + str(e.args), level=1)
 
-        # to get the actual date
+        # parsing timestamps to get the actual date
         ParsedTime = []
         for t in time:
             ParsedTime.append(date_utils.format_timestamp(str(t)))

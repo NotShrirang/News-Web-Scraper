@@ -11,7 +11,7 @@ class Yahoo(Scraper):
         pass
 
     def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
-         """
+        """
         scrapes data from yahoo
 
         Args:
@@ -22,7 +22,7 @@ class Yahoo(Scraper):
 
         Returns:
             pd.DataFrame: Scraped data from Yahoo.
-    """
+        """
         url = base_url + 'search?q='
 
         response = requests.get(url+company_name+keyword)

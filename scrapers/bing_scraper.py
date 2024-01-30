@@ -11,18 +11,18 @@ class Bing(Scraper):
         pass
 
     def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
-    """
-        Scrapes data from Bing
+        """
+            Scrapes data from Bing
 
-        Args:
-            company_name (str): name of the company
-            keyword (str): extra word to be searched along with the company name
-            page_count (int): number of pages to be searched
-            base_url (str): Base URL for constructing search requests.
+            Args:
+                company_name (str): name of the company
+                keyword (str): extra word to be searched along with the company name
+                page_count (int): number of pages to be searched
+                base_url (str): Base URL for constructing search requests.
 
-        Returns:
-            pd.DataFrame: will later be converted into csv
-    """
+            Returns:
+                pd.DataFrame: will later be converted into csv
+        """
         search_string = company_name + "+" + keyword
         all_news = []
 

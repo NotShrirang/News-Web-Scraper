@@ -21,7 +21,7 @@ def scrape_data_for_company(args):
 
     Returns:
         pd.DataFrame: Scraped data from different search engines which will later be converted into csv
-"""
+    """
     elements, base_urls = args
     page_count = elements['page_count']
     final_df = pd.DataFrame()
@@ -53,24 +53,23 @@ def multiprocessing_module(base_urls, query_data):
     Args:
         base_urls: base URLs of search engines
         query_data: contains search query data (company name, keywords, page count)
-"""
+    """
     with Pool() as pool:
         # Remove the extra square brackets
-        results = list(tqdm.tqdm(pool.imap(scrape_data_for_company, ((
-            elements, base_urls) for elements in query_data)), total=len(query_data)))
+        results = list(tqdm.tqdm(pool.imap(scrape_data_for_company, ((elements, base_urls) for elements in query_data)), total=len(query_data)))
 
     final_df = pd.concat(results, ignore_index=True)
     dataframe_utils.convert_df_to_csv(final_df)
 
 
 def multithreading_module(base_urls, query_data):
-   """
+    """
     scrapes data using multithreading
 
     Args:
         base_urls: base URLs of search engines
         query_data: contains search query data (company name, keywords, page count)
-"""
+    """
     page_count = query_data['page_count']
     final_df = pd.DataFrame()
 

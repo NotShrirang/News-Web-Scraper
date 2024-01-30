@@ -3,6 +3,7 @@
 This Python script is designed to scrape news data from Google, Yahoo, and Bing search engines for a list of companies. The scraped data is then saved into a CSV file.
 
 ## Table of Contents
+
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -22,21 +23,21 @@ This Python script is designed to scrape news data from Google, Yahoo, and Bing 
 
 1. Clone the repository:
 
-    ```bash
-    git clone https://github.com/NotShrirang/News-Web-Scraper.git
-    ```
+   ```bash
+   git clone https://github.com/NotShrirang/News-Web-Scraper.git
+   ```
 
 2. Navigate to the project directory:
 
-    ```bash
-    cd News-Web-Scraper
-    ```
+   ```bash
+   cd News-Web-Scraper
+   ```
 
 3. Install the required dependencies:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 ## Usage
 
@@ -44,9 +45,9 @@ This Python script is designed to scrape news data from Google, Yahoo, and Bing 
 
 2. Run the main script:
 
-    ```bash
-    python main.py
-    ```
+   ```bash
+   python main.py
+   ```
 
 3. The scraped data will be saved as `news.csv` in the project directory.
 
@@ -57,3 +58,11 @@ This Python script is designed to scrape news data from Google, Yahoo, and Bing 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Authors
+
+- Shrirang Mahajan
+- Chirantan Degloorkar
+- Aditi Mokashi
+- Shivam Dandavate
+- Sakshi Panhalkar

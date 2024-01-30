@@ -10,6 +10,9 @@ import timeit
 import concurrent.futures
 import sys
 from utils import logger, dataframe_utils
+from warnings import filterwarnings
+
+filterwarnings("ignore")
 
 
 def scrape_data_for_company(args):

@@ -54,7 +54,7 @@ class Google(Scraper):
                             'a') if element.get('aria-label') == 'Next page'][0].get('href')
                     except Exception as e:
                         logger.log_message(
-                            'Error in Google: ' + str(e.args) + '\n')
+                            'Error in Google: ' + str(e.args), level=1)
                         break
 
                 # Extract news data from the current page

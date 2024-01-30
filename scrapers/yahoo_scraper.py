@@ -1,4 +1,4 @@
-#import necessary libraries
+# import necessary libraries
 import requests
 from bs4 import BeautifulSoup
 from .scraper import Scraper

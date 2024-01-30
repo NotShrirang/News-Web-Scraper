@@ -12,6 +12,7 @@ import sys
 
 from utils import logger, dataframe_utils
 
+
 def scrape_data_for_company(args):
     """
     iterates over search strings and calls fuctions for scraping
@@ -22,27 +23,26 @@ def scrape_data_for_company(args):
     Returns:
         pd.DataFrame: Scraped data from different search engines which will later be converted into csv
     """
-    elements, base_urls = args
-    page_count = elements['page_count']
+    company_name, keyword, page_count, base_urls = args
     final_df = pd.DataFrame()
 
-    logger.log_message(message="EXEC: Scraping Data for " + company_name, level=0)
+    logger.log_message(message="EXEC: Scraping Data for " +
+                       company_name, level=0)
 
     # pass company, keyword, and page_count to each search engine function
-    for company_name in tqdm.tqdm(elements['company_names']):
-        for keyword in tqdm.tqdm(elements['keywords']):
-            google = Google()
-            df1 = google.scrape(company_name, keyword, page_count,
-                                base_url=base_urls['google'])
-            yahoo = Yahoo()
-            df2 = yahoo.scrape(company_name, keyword, page_count,
-                            base_url=base_urls['yahoo'])
-            bing = Bing()
-            df3 = bing.scrape(company_name, keyword, page_count,
-                            base_url=base_urls['bing'])
-            final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
+    google = Google()
+    df1 = google.scrape(company_name, keyword, page_count,
+                        base_url=base_urls['google'])
+    yahoo = Yahoo()
+    df2 = yahoo.scrape(company_name, keyword, page_count,
+                       base_url=base_urls['yahoo'])
+    bing = Bing()
+    df3 = bing.scrape(company_name, keyword, page_count,
+                      base_url=base_urls['bing'])
+    final_df = pd.concat([final_df, df1, df2, df3], ignore_index=True)
 
-    logger.log_message(message="DONE:Scraped Data for " + company_name, level=0)
+    logger.log_message(message="DONE:Scraped Data for " +
+                       company_name, level=0)
     return final_df
 
 
@@ -56,7 +56,11 @@ def multiprocessing_module(base_urls, query_data):
     """
     with Pool() as pool:
         # Remove the extra square brackets
-        results = list(tqdm.tqdm(pool.imap(scrape_data_for_company, ((elements, base_urls) for elements in query_data)), total=len(query_data)))
+        results = pool.map(scrape_data_for_company, list([
+            (company_name, keyword, query_data['page_count'], base_urls)
+            for company_name in tqdm.tqdm(query_data['company_names'])
+            for keyword in tqdm.tqdm(query_data['keywords'])
+        ]))
 
     final_df = pd.concat(results, ignore_index=True)
     dataframe_utils.convert_df_to_csv(final_df)
@@ -75,7 +79,8 @@ def multithreading_module(base_urls, query_data):
 
     # pass company, keyword and page_count to each search engine function
     for company_name in tqdm.tqdm(query_data['company_names']):
-        logger.log_message(message="EXEC: Scraping Data for "+company_name, level=0)
+        logger.log_message(
+            message="EXEC: Scraping Data for "+company_name, level=0)
         for keyword in tqdm.tqdm(query_data['keywords']):
             google = Google()
             yahoo = Yahoo()
@@ -96,7 +101,8 @@ def multithreading_module(base_urls, query_data):
                 result_df = future.result()
                 final_df = pd.concat([final_df, result_df], ignore_index=True)
 
-        logger.log_message(message="DONE:Scraped Data for "+company_name, level=0)
+        logger.log_message(
+            message="DONE:Scraped Data for "+company_name, level=0)
     dataframe_utils.convert_df_to_csv(final_df)
 
 
@@ -120,8 +126,9 @@ def main():
     logger.log_message(message="SCRAPING DONE", level=0)
 
     elapsed_time = timeit.default_timer() - start_time
-    logger.log_message(message=f"Elapsed Time: {elapsed_time} seconds", level=0)
-    
+    logger.log_message(
+        message=f"Elapsed Time: {elapsed_time} seconds", level=0)
+
 
 if __name__ == '__main__':
     main()

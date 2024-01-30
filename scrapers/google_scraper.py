@@ -1,4 +1,4 @@
-#import necessary libraries
+# import necessary libraries
 import bs4
 import requests
 import pandas as pd
@@ -26,7 +26,7 @@ class Google(Scraper):
         all_news = []
         NUMBER_PAGE = page_count
         query = company_name + " " + keyword
-        next_link = "*****"  #placeholder for initial value
+        next_link = "*****"  # placeholder for initial value
 
         # pagination
         for i in range(NUMBER_PAGE):
@@ -47,7 +47,8 @@ class Google(Scraper):
                     next_link = [element for element in soup.find_all(
                         'a') if element.get('aria-label') == 'Next page'][0].get('href')
                 except Exception as e:
-                    logger.log_message('Error in Google: ' + str(e.args) + '\n')
+                    logger.log_message(
+                        'Error in Google: ' + str(e.args) + '\n')
                     break
 
             # Extract news data from the current page

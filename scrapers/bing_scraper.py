@@ -1,4 +1,4 @@
-#import necessary libraries
+# import necessary libraries
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
@@ -42,7 +42,8 @@ class Bing(Scraper):
                         if str(ele.get('aria-label')).endswith('ago'):
                             timestamp.append(ele.get('aria-label'))
                 except Exception as e:
-                    logger.log_message(message='Error in Bing: ' + str(e.args),level=1)
+                    logger.log_message(
+                        message='Error in Bing: ' + str(e.args), level=1)
 
                 count = 0
                 for div in soup:
@@ -50,14 +51,16 @@ class Bing(Scraper):
                         continue
                     news = {}
 
-                    # fetcing required data from attributes 
+                    # fetcing required data from attributes
                     news['link'] = div["data-url"]
                     news['title'] = div["data-title"]
                     news['source'] = div["data-author"]
                     try:
-                        news['timestamp'] = date_utils.format_timestamp(str(timestamp[count]))
+                        news['timestamp'] = date_utils.format_timestamp(
+                            str(timestamp[count]))
                     except Exception as e:
-                        logger.log_message(message='Error in Bing: ' + str(e.args), level=1)
+                        logger.log_message(
+                            message='Error in Bing: ' + str(e.args), level=1)
                     count += 1
                     news['search_engine'] = 'Bing'
                     news['page_count'] = i + 1

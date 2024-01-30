@@ -6,8 +6,8 @@
   },
 
   "query_data": {
-      "company_names": ["Google","Meta"],
-      "keywords": ["Advertising", "AI"],
-      "page_count": 1
-    }
+    "company_names": ["Apple", "Google", "Volkwagen", "Tesla", "Tata"],
+    "keywords": ["AI", "Advertising", "Car", "Mobile", "EV"],
+    "page_count": 5
+  }
 }

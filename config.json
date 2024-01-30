@@ -1,13 +1,13 @@
 {
   "base_url": {
-    "google": "https://www.google.com/",
+    "google": "http://www.google.com/",
     "bing": "https://www.bing.com/",
     "yahoo": "https://news.search.yahoo.com/"
   },
 
   "query_data": {
-    "company_names": ["Apple", "Google", "Volkwagen", "Tesla", "Tata"],
-    "keywords": ["AI", "Advertising", "Car", "Mobile", "EV"],
-    "page_count": 5
+    "company_names": ["Apple"],
+    "keywords": ["AI"],
+    "page_count": 1
   }
 }

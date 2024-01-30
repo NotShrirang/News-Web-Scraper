@@ -11,55 +11,64 @@ class Yahoo(Scraper):
         pass
 
     def scrape(self, company_name: str, keyword: str, page_count: int, base_url: str) -> pd.DataFrame:
-        """
-        scrapes data from yahoo
+        try:
+            """
+            scrapes data from yahoo
 
-        Args:
-            company_name (str): name of the company
-            keyword (str): extra word to be searched along with the company name
-            page_count (int): number of pages to be searched
-            base_url (str): base URL for constructing search requests.
+            Args:
+                company_name (str): name of the company
+                keyword (str): extra word to be searched along with the company name
+                page_count (int): number of pages to be searched
+                base_url (str): base URL for constructing search requests.
 
-        Returns:
-            pd.DataFrame: Scraped data from Yahoo.
-        """
-        url = base_url + 'search?q='
+            Returns:
+                pd.DataFrame: Scraped data from Yahoo.
+            """
+            url = base_url + 'search?q='
 
-        response = requests.get(url+company_name+keyword)
-        soup = BeautifulSoup(response.text, 'lxml')
-        NUMBER_OF_PAGES = page_count
+            response = requests.get(url+company_name+keyword)
 
-        titles, links, media, time, searchEngine, pageNumber, searchString = [
-        ], [], [], [], [], [], []
-
-        # pagination
-        for i in range(NUMBER_OF_PAGES):
-            all_news = soup.find_all('ul', class_='compArticleList')
-            for news in all_news:
-                titles.append(news.find('h4').text)
-                links.append(news.find('a')['href'])
-                media.append(
-                    news.find('span', class_='s-source mr-5 cite-co').text)
-                time.append(
-                    news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
-                searchString.append(company_name+' and '+keyword)
-                pageNumber.append(i+1)
-                searchEngine.append('Yahoo')
-
-            try:
-                # gets data from next page
-                nextResponse = requests.get(
-                    soup.find('a', class_='next')['href'])
-                soup = BeautifulSoup(nextResponse.content, 'lxml')
-            except Exception as e:
+            if response.status_code != 200:
                 logger.log_message(
-                    message='Error in Yahoo: ' + str(e.args), level=1)
+                            message='Error in Yahoo URL', level=1)
+                        
+            soup = BeautifulSoup(response.text, 'lxml')
+            NUMBER_OF_PAGES = page_count
 
-        # parsing timestamps to get the actual date
-        ParsedTime = []
-        for t in time:
-            ParsedTime.append(date_utils.format_timestamp(str(t)))
+            titles, links, media, time, searchEngine, pageNumber, searchString = [
+            ], [], [], [], [], [], []
 
-        data = {"title": titles, "link": links, "source": media,
-                "timestamp": ParsedTime, 'search_engine': searchEngine, 'page_count': pageNumber, 'search_string': searchString}
-        return pd.DataFrame(data)
+            # pagination
+            for i in range(NUMBER_OF_PAGES):
+                all_news = soup.find_all('ul', class_='compArticleList')
+                for news in all_news:
+                    titles.append(news.find('h4').text)
+                    links.append(news.find('a')['href'])
+                    media.append(
+                        news.find('span', class_='s-source mr-5 cite-co').text)
+                    time.append(
+                        news.find('span', class_='fc-2nd s-time mr-8').text.replace('.', ''))
+                    searchString.append(company_name+' and '+keyword)
+                    pageNumber.append(i+1)
+                    searchEngine.append('Yahoo')
+
+                try:
+                    # gets data from next page
+                    nextResponse = requests.get(
+                        soup.find('a', class_='next')['href'])
+                    soup = BeautifulSoup(nextResponse.content, 'lxml')
+                except Exception as e:
+                    logger.log_message(
+                        message='Error in Yahoo: ' + str(e.args), level=1)
+
+            # parsing timestamps to get the actual date
+            ParsedTime = []
+            for t in time:
+                ParsedTime.append(date_utils.format_timestamp(str(t)))
+
+            data = {"title": titles, "link": links, "source": media,
+                    "timestamp": ParsedTime, 'search_engine': searchEngine, 'page_count': pageNumber, 'search_string': searchString}
+            return pd.DataFrame(data)
+        except Exception as e:
+            logger.log_message(
+                            message='Error in Yahoo: ' + str(e.args), level=1)
